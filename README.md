@@ -40,27 +40,53 @@ export PYTHONPATH="$PWD:$PYTHONPATH"
 export CUDA_VISIBLE_DEVICES=0,1,2,3
 
 python train.py \
-       --task "tsp" \
-       --project_name "consistency_co_test" \
-       --wandb_logger_name "tsp_50" \
-       --do_test \
-       --storage_path "./" \
-       --test_split your_data_path \
-       --inference_schedule "cosine" \
-       --inference_diffusion_steps 1 \
-       --two_opt_iterations 5000 \
-       --ckpt_path 'tsp50.ckpt' \
-       --consistency \
-       --resume_weight_only \
-       --parallel_sampling 1 \
-       --sequential_sampling 1 \
-       --rewrite \
-       --guided \
-       --rewrite_steps 1 \
-       --rewrite_ratio 0.2
+  --task "tsp" \
+  --project_name "consistency_co_test" \
+  --wandb_logger_name "tsp_50" \
+  --do_test \
+  --storage_path "./" \
+  --test_split "your_data_path" \
+  --inference_schedule "cosine" \
+  --inference_diffusion_steps 1 \
+  --two_opt_iterations 5000 \
+  --ckpt_path 'tsp50.ckpt' \
+  --consistency \
+  --resume_weight_only \
+  --parallel_sampling 1 \
+  --sequential_sampling 1 \
+  --rewrite \
+  --guided \
+  --rewrite_steps 1 \
+  --rewrite_ratio 0.2
 ```
 
 The training and evaluation scripts for T2T can be found in [T2T](https://github.com/Thinklab-SJTU/T2TCO).
+
+For instance, a simple evaluation of Fast T2T on TSP50 data:
+
+```bash
+export PYTHONPATH="$PWD:$PYTHONPATH"
+export CUDA_VISIBLE_DEVICES=0,1,2,3
+
+python -u diffusion/train.py \
+  --task "tsp" \
+  --project_name "consistency_co_test" \
+  --wandb_logger_name "tsp_50" \
+  --do_test \
+  --storage_path "./" \
+  --test_split "your_data_path" \
+  --inference_schedule "cosine" \
+  --inference_diffusion_steps 50 \
+  --two_opt_iterations 5000 \
+  --ckpt_path "ckpts/tsp50_categorical.ckpt" \
+  --resume_weight_only \
+  --parallel_sampling 1 \
+  --sequential_sampling 1 \
+  --rewrite \
+  --norm \
+  --rewrite_steps 3 \
+  --rewrite_ratio 0.4
+```
 
 ## Reference
 
