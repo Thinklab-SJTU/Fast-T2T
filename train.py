@@ -20,6 +20,7 @@ torch.cuda.amp.autocast(enabled=True)
 torch.cuda.empty_cache()
 
 import warnings
+
 warnings.filterwarnings("ignore")
 
 
@@ -109,6 +110,11 @@ def arg_parser():
     parser.add_argument("--boundary_func", default="truncate")
     parser.add_argument("--alpha", type=float)
 
+    parser.add_argument(
+        "--use_intermediate",
+        action="store_true",
+        help="set true when use intermediate x0 to decode tours",
+    )
     parser.add_argument("--c1", type=float, default=50, help="coefficient of F1")
     parser.add_argument("--c2", type=float, default=50, help="coefficient of F2")
 
@@ -125,7 +131,9 @@ def main(args):
     epochs = args.num_epochs
     project_name = args.project_name
 
-    if args.offline or ("WANDB_MODE" in os.environ and os.environ["WANDB_MODE"] == "offline"):
+    if args.offline or (
+        "WANDB_MODE" in os.environ and os.environ["WANDB_MODE"] == "offline"
+    ):
         os.environ["WANDB_MODE"] = "offline"
         wandb.init()
     else:

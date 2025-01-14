@@ -174,10 +174,10 @@ class TSPConsistency(MetaConsistency):
                     1.0 + 0.05 * torch.rand_like(xt.float(), device=device)
                 )
                 x0_pred = model.forward(
-                    points.float().to(device),      # b*s*n, 2 (4000, 2)
-                    xt_scale,   # b*s*n*n (200000)
-                    t1,     # 1
-                    edge_index.long().to(device) if edge_index is not None else None,   # 2, 200000
+                    points.float().to(device),  # b*s*n, 2 (4000, 2)
+                    xt_scale,  # b*s*n*n (200000)
+                    t1,  # 1
+                    edge_index.long().to(device) if edge_index is not None else None,
                 )  # b, 2, n, n
 
                 if not model.sparse:
@@ -186,6 +186,28 @@ class TSPConsistency(MetaConsistency):
                     x0_pred = x0_pred.reshape((-1, 2)).softmax(
                         dim=-1
                     )  # n*k, 2; k is the sparse factor
+
+                if model.args.use_intermediate:
+                    adj_mat = x0_pred[..., 1].cpu().detach().numpy() + 1e-6  # [B, N, N]
+
+                    tours, merge_iterations = merge_tours(  # [B, N+1], list
+                        adj_mat,
+                        np_points,
+                        np_edge_index,
+                        sparse_graph=model.sparse,
+                        parallel_sampling=model.args.parallel_sampling,
+                    )
+
+                    # Refine using 2-opt
+                    # solver_tours,  [B, N+1] ndarray, the visiting sequence of each city
+                    solved_tours, ns = batched_two_opt_torch(
+                        np_points.astype("float64"),
+                        np.array(tours).astype("int64"),
+                        max_iterations=model.args.two_opt_iterations,
+                        device=device,
+                    )
+
+                    stacked_tours.append(solved_tours)
 
                 if not t2.item == 0:
                     x0 = torch.bernoulli(x0_pred[..., 1].clamp(0, 1))
@@ -202,9 +224,6 @@ class TSPConsistency(MetaConsistency):
 
             adj_mat = x0_pred[..., 1].cpu().detach().numpy() + 1e-6  # [B, N, N]
 
-            # np.save('heatmap_optcm_5_0.npy', adj_mat.reshape((100000, -1)))
-            # print(adj_mat.reshape((100000, -1)).shape)
-            # input()
             tours, merge_iterations = merge_tours(  # [B, N+1], list
                 adj_mat,
                 np_points,
@@ -475,7 +494,7 @@ class TSPConsistency(MetaConsistency):
             xt_scale_u = xt_u * 2 - 1
             xt_scale_u = xt_scale_u * (
                 1.0 + 0.05 * torch.rand_like(xt_u.float(), device=device)
-            )       # b*n
+            )  # b*n
 
             # [b, 2, n, n]
             x0_pred_u = model.forward(

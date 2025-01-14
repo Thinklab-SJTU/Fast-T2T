@@ -1,4 +1,4 @@
-export CUDA_VISIBLE_DEVICES=3
+export CUDA_VISIBLE_DEVICES=0
 
 step_list="5,0 5,5"
 for step in $step_list; do
@@ -11,7 +11,7 @@ for step in $step_list; do
        --wandb_logger_name "tsp_1000" \
        --do_test \
        --storage_path "./" \
-       --test_split "data/tsp_test/tsp1000_concorde_23.11812.txt" \
+       --test_split "data/tsp/tsp1000_concorde_23.11812.txt" \
        --inference_schedule "cosine" \
        --inference_diffusion_steps $infer \
        --two_opt_iterations 0 \
@@ -33,7 +33,7 @@ for step in $step_list; do
        --wandb_logger_name "tsp_1000" \
        --do_test \
        --storage_path "./" \
-       --test_split "data/tsp_test/tsp1000_concorde_23.11812.txt" \
+       --test_split "data/tsp/tsp1000_concorde_23.11812.txt" \
        --inference_schedule "cosine" \
        --inference_diffusion_steps $infer \
        --two_opt_iterations 5000 \
@@ -55,7 +55,7 @@ for step in $step_list; do
        --wandb_logger_name "tsp_1000" \
        --do_test \
        --storage_path "./" \
-       --test_split "data/tsp_test/tsp1000_concorde_23.11812.txt" \
+       --test_split "data/tsp/tsp1000_concorde_23.11812.txt" \
        --inference_schedule "cosine" \
        --inference_diffusion_steps $infer \
        --two_opt_iterations 0 \
@@ -77,7 +77,7 @@ for step in $step_list; do
        --wandb_logger_name "tsp_1000" \
        --do_test \
        --storage_path "./" \
-       --test_split "data/tsp_test/tsp1000_concorde_23.11812.txt" \
+       --test_split "data/tsp/tsp1000_concorde_23.11812.txt" \
        --inference_schedule "cosine" \
        --inference_diffusion_steps $infer \
        --two_opt_iterations 5000 \
