@@ -27,7 +27,7 @@ cd -
 
 ## Data and Pretrained Checkpoints
 
-We provide the evaluation data for TSP in `data/tsp`. For other details, please refer to `data` folder. Please download the pretrained model checkpoints of Fast T2T from [here](https://drive.google.com/drive/folders/107mbgDsRqp-0Vf16_xDRGVFeDzeRNr-P?usp=sharing). 
+We provide the evaluation data for TSP in `data/tsp`. For other details, please refer to `data` folder. Please download the pretrained model checkpoints of Fast T2T from [here](https://drive.google.com/drive/folders/107mbgDsRqp-0Vf16_xDRGVFeDzeRNr-P?usp=sharing). TSP-50 and TSP-100 models are trained with parameter initialization from [DIFUSCO](https://github.com/Edward-Sun/DIFUSCO).
 
 ## Reproduction
 
